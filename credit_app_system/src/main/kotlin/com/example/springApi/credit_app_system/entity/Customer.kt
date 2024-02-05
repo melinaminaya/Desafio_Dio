@@ -1,4 +1,4 @@
-package com.example.springApi.demo.entity
+package com.example.springApi.credit_app_system.entity
 
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column

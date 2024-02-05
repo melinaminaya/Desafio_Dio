@@ -1,4 +1,4 @@
-package com.example.springApi.demo
+package com.example.springApi.credit_app_system
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

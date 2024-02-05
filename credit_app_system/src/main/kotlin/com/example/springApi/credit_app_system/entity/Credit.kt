@@ -1,6 +1,6 @@
-package com.example.springApi.demo.entity
+package com.example.springApi.credit_app_system.entity
 
-import com.example.springApi.demo.enums.Status
+import com.example.springApi.credit_app_system.enums.Status
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Enumerated
@@ -21,6 +21,6 @@ data class Credit (
     @Column(nullable = false) val dayFirstInstallmentval : LocalDate,
     @Column(nullable = false) val numberOfInstallments: Int = 0,
     @Enumerated val status: Status = Status.IN_PROGRESS,
-    @ManyToOne val customer: Customer?= null,
+    @ManyToOne var customer: Customer?= null,
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id:Long?=   null //primary key for the table with this annotation.
     )
