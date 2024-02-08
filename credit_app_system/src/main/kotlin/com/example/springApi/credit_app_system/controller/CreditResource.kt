@@ -7,6 +7,7 @@ import com.example.springApi.credit_app_system.dto.CustomerUpdateDto
 import com.example.springApi.credit_app_system.dto.CustomerView
 import com.example.springApi.credit_app_system.entity.Credit
 import com.example.springApi.credit_app_system.service.impl.CreditService
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -28,7 +29,7 @@ class CreditResource(
 ) {
 
     @PostMapping
-    fun saveCredit(@RequestBody credit: CreditDto): ResponseEntity<String> {
+    fun saveCredit(@RequestBody @Valid credit: CreditDto): ResponseEntity<String> {
         val savedCredit = this.creditService.save(credit.toEntity())
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(
