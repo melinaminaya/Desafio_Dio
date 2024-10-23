@@ -1,0 +1,41 @@
+Metadata-Version: 2.1
+Name: IMAGE-PROCESING-PACKAGE
+Version: 0.0.1
+Summary: My short description of
+Home-page: mygithub.com
+Author: Melina
+Author-email: melina.minaya@gmail.com
+License: UNKNOWN
+Platform: UNKNOWN
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+
+# image_processing
+Description. The package image_processing is used to:
+    Processing:
+    - Histogram matching
+    - Structural similarity
+    - Resize image
+    Utils:
+    - Read image
+    - Save image
+    - Plot image
+    - Plot result
+    - Plot histogram
+
+## Installation
+Use the package manager pip to install image_processing
+
+``` pip install image_processing```
+
+## Usage
+
+``` from image_processing.processing import combination.py```
+
+## Comandos de instalação antes de instalar o package
+ ```bash 
+ python -m pip install --upgrade pip 
+ python -m pip install --user twine 
+ python -m pip install --user setuptools 
+ ```
+
