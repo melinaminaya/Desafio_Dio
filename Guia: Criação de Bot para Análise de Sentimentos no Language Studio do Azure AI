@@ -1,0 +1,58 @@
+# Guia: Criação de Bot para Análise de Sentimentos no Language Studio do Azure AI
+
+## Pré-requisitos
+- Conta no Azure (pode criar uma gratuitamente).
+- Acesso ao portal do Azure e ao Language Studio.
+
+---
+
+## Passo 1: Criar um Recurso no Azure
+1. Acesse o [Portal do Azure](https://portal.azure.com/).
+2. Clique em **Criar um recurso**.
+3. Em **Categorias**, selecione **Inteligência Artificial + Machine Learning**.
+4. Procure por **Serviço de Linguagem** e clique em **Criar**.
+5. Preencha os campos necessários:
+   - Nome do recurso (único).
+   - Grupo de recursos.
+   - Plano de preços (recomenda-se o Free F0 para testes).
+6. Clique em **Criar** e aguarde a validação e finalização.
+
+---
+
+## Passo 2: Configurar o Language Studio
+1. Acesse o [Language Studio](https://language.cognitive.azure.com/).
+2. Faça login com sua conta do Azure.
+3. Na página inicial, selecione o recurso criado anteriormente.
+4. Clique em **Classificar Texto** e escolha **Analisar Sentimentos e Opiniões**.
+
+---
+
+## Passo 3: Inserir Dados para Análise
+1. Escolha o idioma do texto (por exemplo, Português ou Inglês).
+2. Insira as sentenças ou textos que deseja analisar.
+3. Clique em **Examinar** para obter os resultados.
+
+---
+
+## Passo 4: Interpretar os Resultados
+- O Language Studio fornecerá a polaridade do texto (positivo, negativo ou neutro) e insights adicionais, como opiniões extraídas.
+
+---
+
+## Passo 5: Integrar com um Bot
+1. Use a API REST do Azure para integrar o serviço de análise de sentimentos ao seu bot.
+2. Configure o endpoint e as chaves de acesso no código do bot.
+3. Teste a integração enviando textos para análise e exibindo os resultados no bot.
+
+---
+
+## Conclusão
+Com esses passos, você terá um bot funcional que utiliza o Language Studio para análise de sentimentos. Para mais detalhes, consulte a [documentação oficial do Azure](https://aka.ms/ai900-text-analysis).
+
+---
+
+## Dicas Adicionais
+- **Melhore a Experiência do Usuário**: Adicione respostas personalizadas no bot com base nos resultados da análise.
+- **Automatize**: Configure fluxos automatizados para processar grandes volumes de texto.
+- **Compartilhe**: Publique seu projeto no GitHub para demonstrar suas habilidades.
+
