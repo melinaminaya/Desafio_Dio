@@ -123,34 +123,12 @@ public static class PropostasEndpoints
         builder.MapPatch("{id:guid}/proposals/{propostaId:guid}/accept", async (
             [FromRoute] Guid id,
             [FromRoute] Guid propostaId,
-            [FromServices] IRepository<Proposta> repoProposta,
-            [FromServices] IRepository<Locacao> repoLocacao) =>
+            [FromServices] IPropostaService service) =>
         {
-
-            var proposta = await repoProposta
-                .GetFirstAsync(
-                    p => p.Id == propostaId && p.SolicitacaoId == id,
-                    p => p.Id);
-            if (proposta is null) return Results.NotFound();
-
-            proposta.Status = StatusProposta.Aceita;
-
-            // criar locação a partir da proposta aceita
-            var locacao = new Locacao()
-            {
-                PropostaId = proposta.Id,
-                DataInicio = DateTime.Now,
-                DataPrevistaEntrega = proposta.Solicitacao.DataInicioOperacao.AddDays(-proposta.Solicitacao.DisponibilidadePrevia),
-                DataTermino = proposta.Solicitacao.DataInicioOperacao.AddDays(proposta.Solicitacao.DuracaoPrevistaLocacao)
-            };
-
-            using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-
-            await repoProposta.UpdateAsync(proposta);
-            await repoLocacao.AddAsync(locacao);
-
-            scope.Complete();
-
+            var casoUso = new AprovarProposta(id, propostaId);
+            var proposta = await service.AprovarAsync(casoUso);
+            if(proposta is null ) return Results.NotFound();
+            
             return Results.Ok(PropostaResponse.From(proposta));
         })
         .WithSummary("Cliente aceita proposta de locação.")
@@ -159,6 +137,11 @@ public static class PropostasEndpoints
         .Produces<PropostaResponse>(StatusCodes.Status200OK);
 
         return builder;
+    }
+
+    private static object async(object value1, Guid guid1, object id, object value2, Guid guid2, object propostaId, object value3, IPropostaService propostaService, Func<object, IResult> value4)
+    {
+        throw new NotImplementedException();
     }
 
     public static RouteGroupBuilder MapPatchRejectProposta(this RouteGroupBuilder builder)
