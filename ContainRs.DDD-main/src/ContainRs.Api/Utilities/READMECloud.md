@@ -112,3 +112,6 @@ To avoid charges, delete the VM and associated resources:
 * Consider using **Azure Bastion** for safer RDP/SSH access.
 
 ---
+
+## Creating Instance in the Cloud 
+``` https://learn.microsoft.com/pt-br/azure/azure-sql/managed-instance/instance-create-quickstart?view=azuresql&tabs=azure-portal ```
