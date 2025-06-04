@@ -1,0 +1,11 @@
+Equipment,Brand,Category,Price,Currency,Country
+Laptop,Dell,Electronics,1200,USD,USA
+Monitor,LG,Electronics,300,USD,South Korea
+Keyboard,Logitech,Accessories,45,USD,Switzerland
+Mouse,Razer,Accessories,25,USD,USA
+Printer,HP,Electronics,250,USD,USA
+Router,TP-Link,Networking,90,USD,China
+Projector,Epson,Electronics,600,USD,Japan
+Desk,IKEA,Furniture,200,USD,Sweden
+Chair,Herman Miller,Furniture,150,USD,USA
+Webcam,Microsoft,Accessories,70,USD,USA

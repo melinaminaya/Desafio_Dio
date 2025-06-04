@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise de Equipamentos</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .section {
+            margin-bottom: 40px;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #3498db;
+        }
+
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .metric-card {
+            display: inline-block;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+            min-width: 200px;
+            text-align: center;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(52, 152, 219, 0.4);
+        }
+
+        .metric-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        th {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+            transform: scale(1.01);
+            transition: all 0.2s ease;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>📊 Análise de Equipamentos</h1>
+
+        <div class="section">
+            <h2>1. Preço Médio por Categoria</h2>
+            <div id="avgPrices"></div>
+            <div class="chart-container">
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>2. Equipamentos Acima de $1000 USD</h2>
+            <div id="expensiveItems"></div>
+        </div>
+
+        <div class="section">
+            <h2>3. Número de Equipamentos por País</h2>
+            <div id="countryCount"></div>
+            <div class="chart-container">
+                <canvas id="countryChart"></canvas>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>4. Comparação EUA vs Alemanha</h2>
+            <div class="warning">
+                <strong>⚠️ Observação:</strong> Não há equipamentos da Alemanha nos dados fornecidos para comparação.
+            </div>
+            <div id="countryComparison"></div>
+        </div>
+    </div>
+
+    <script>
+        // Dados do CSV
+        const data = [
+            { Equipment: "Laptop", Brand: "Dell", Category: "Electronics", Price: 1200, Currency: "USD", Country: "USA" },
+            { Equipment: "Monitor", Brand: "LG", Category: "Electronics", Price: 300, Currency: "USD", Country: "South Korea" },
+            { Equipment: "Keyboard", Brand: "Logitech", Category: "Accessories", Price: 45, Currency: "USD", Country: "Switzerland" },
+            { Equipment: "Mouse", Brand: "Razer", Category: "Accessories", Price: 25, Currency: "USD", Country: "USA" },
+            { Equipment: "Printer", Brand: "HP", Category: "Electronics", Price: 250, Currency: "USD", Country: "USA" },
+            { Equipment: "Router", Brand: "TP-Link", Category: "Networking", Price: 90, Currency: "USD", Country: "China" },
+            { Equipment: "Projector", Brand: "Epson", Category: "Electronics", Price: 600, Currency: "USD", Country: "Japan" },
+            { Equipment: "Desk", Brand: "IKEA", Category: "Furniture", Price: 200, Currency: "USD", Country: "Sweden" },
+            { Equipment: "Chair", Brand: "Herman Miller", Category: "Furniture", Price: 150, Currency: "USD", Country: "USA" },
+            { Equipment: "Webcam", Brand: "Microsoft", Category: "Accessories", Price: 70, Currency: "USD", Country: "USA" }
+        ];
+
+        // 1. Calcular preço médio por categoria
+        function calculateAvgPriceByCategory() {
+            const categories = {};
+
+            data.forEach(item => {
+                if (!categories[item.Category]) {
+                    categories[item.Category] = { total: 0, count: 0 };
+                }
+                categories[item.Category].total += item.Price;
+                categories[item.Category].count += 1;
+            });
+
+            const avgPrices = {};
+            Object.keys(categories).forEach(cat => {
+                avgPrices[cat] = (categories[cat].total / categories[cat].count).toFixed(2);
+            });
+
+            return avgPrices;
+        }
+
+        // 2. Equipamentos acima de $1000
+        function getExpensiveItems() {
+            return data.filter(item => item.Price > 1000);
+        }
+
+        // 3. Contar equipamentos por país
+        function countByCountry() {
+            const countries = {};
+            data.forEach(item => {
+                countries[item.Country] = (countries[item.Country] || 0) + 1;
+            });
+            return countries;
+        }
+
+        // 4. Comparação EUA vs outros países
+        function compareCountries() {
+            const usaItems = data.filter(item => item.Country === "USA");
+            const germanyItems = data.filter(item => item.Country === "Germany");
+
+            const usaAvg = usaItems.length > 0 ?
+                (usaItems.reduce((sum, item) => sum + item.Price, 0) / usaItems.length).toFixed(2) : 0;
+
+            const germanyAvg = germanyItems.length > 0 ?
+                (germanyItems.reduce((sum, item) => sum + item.Price, 0) / germanyItems.length).toFixed(2) : 0;
+
+            return { usa: usaAvg, germany: germanyAvg, usaCount: usaItems.length, germanyCount: germanyItems.length };
+        }
+
+        // Renderizar resultados
+        function renderResults() {
+            // 1. Preços médios por categoria
+            const avgPrices = calculateAvgPriceByCategory();
+            let avgHtml = '';
+            Object.keys(avgPrices).forEach(cat => {
+                avgHtml += `
+                    <div class="metric-card">
+                        <div class="metric-value">$${avgPrices[cat]}</div>
+                        <div class="metric-label">${cat}</div>
+                    </div>
+                `;
+            });
+            document.getElementById('avgPrices').innerHTML = avgHtml;
+
+            // 2. Itens caros
+            const expensiveItems = getExpensiveItems();
+            let expensiveHtml = '';
+            if (expensiveItems.length > 0) {
+                expensiveHtml = '<table><tr><th>Equipamento</th><th>Marca</th><th>Categoria</th><th>Preço</th><th>País</th></tr>';
+                expensiveItems.forEach(item => {
+                    expensiveHtml += `
+                        <tr>
+                            <td>${item.Equipment}</td>
+                            <td>${item.Brand}</td>
+                            <td>${item.Category}</td>
+                            <td class="highlight">$${item.Price}</td>
+                            <td>${item.Country}</td>
+                        </tr>
+                    `;
+                });
+                expensiveHtml += '</table>';
+            } else {
+                expensiveHtml = '<p>Nenhum equipamento encontrado acima de $1000.</p>';
+            }
+            document.getElementById('expensiveItems').innerHTML = expensiveHtml;
+
+            // 3. Contagem por país
+            const countryCount = countByCountry();
+            let countryHtml = '';
+            Object.keys(countryCount).forEach(country => {
+                countryHtml += `
+                    <div class="metric-card">
+                        <div class="metric-value">${countryCount[country]}</div>
+                        <div class="metric-label">${country}</div>
+                    </div>
+                `;
+            });
+            document.getElementById('countryCount').innerHTML = countryHtml;
+
+            // 4. Comparação países
+            const comparison = compareCountries();
+            let comparisonHtml = `
+                <div class="metric-card">
+                    <div class="metric-value">$${comparison.usa}</div>
+                    <div class="metric-label">Preço Médio - EUA (${comparison.usaCount} itens)</div>
+                </div>
+                <div class="metric-card" style="background: linear-gradient(135deg, #95a5a6, #7f8c8d);">
+                    <div class="metric-value">${comparison.germanyCount > 0 ? '$' + comparison.germany : 'N/A'}</div>
+                    <div class="metric-label">Preço Médio - Alemanha (${comparison.germanyCount} itens)</div>
+                </div>
+            `;
+            document.getElementById('countryComparison').innerHTML = comparisonHtml;
+        }
+
+        // Criar gráficos
+        function createCharts() {
+            // Gráfico de categorias
+            const avgPrices = calculateAvgPriceByCategory();
+            const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+            new Chart(categoryCtx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(avgPrices),
+                    datasets: [{
+                        label: 'Preço Médio (USD)',
+                        data: Object.values(avgPrices).map(Number),
+                        backgroundColor: [
+                            'rgba(52, 152, 219, 0.8)',
+                            'rgba(231, 76, 60, 0.8)',
+                            'rgba(46, 204, 113, 0.8)',
+                            'rgba(241, 196, 15, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(52, 152, 219, 1)',
+                            'rgba(231, 76, 60, 1)',
+                            'rgba(46, 204, 113, 1)',
+                            'rgba(241, 196, 15, 1)'
+                        ],
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function (value) {
+                                    return '$' + value;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de países
+            const countryCount = countByCountry();
+            const countryCtx = document.getElementById('countryChart').getContext('2d');
+            new Chart(countryCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(countryCount),
+                    datasets: [{
+                        data: Object.values(countryCount),
+                        backgroundColor: [
+                            '#3498db', '#e74c3c', '#2ecc71', '#f39c12',
+                            '#9b59b6', '#1abc9c', '#34495e', '#95a5a6'
+                        ],
+                        borderWidth: 3,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function () {
+            renderResults();
+            createCharts();
+        });
+    </script>
+</body>
+
+</html>
