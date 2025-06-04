@@ -75,4 +75,4 @@ Os EUA lideram em quantidade de equipamentos representados
 Apenas um produto ultrapassa a marca de $1000
 A distribuição geográfica é bem diversificada, representando 6 países diferentes.
 A visualização interativa em html [analysis.html] mostra todos esses dados com gráficos e métricas detalhadas para uma análise mais visual e completa.
-(Página publicada de visualização)[https://claude.ai/public/artifacts/cae49e0f-063a-45e1-9091-f09937c4611b]
+[Página publicada de visualização](https://claude.ai/public/artifacts/cae49e0f-063a-45e1-9091-f09937c4611b)
