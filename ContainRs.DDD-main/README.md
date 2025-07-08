@@ -1,4 +1,6 @@
 # Preparando o ambiente
+Stacks:
+![technology Dotnet](https://img.shields.io/badge/techonolgy-Dotnet-orange)
 
 ## Criando o banco de dados a estrutura e dados iniciais do Identity
 
